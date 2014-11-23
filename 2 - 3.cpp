@@ -11,12 +11,12 @@ double input()
 }
 double picalculator(double x)
 {
-	int sch = 1;
-	double result = 1;
-	for (int i = 3; (1/i) >= x; i + 2)
+	double sch = 1.0;
+	double result = 1.0;
+	for (double i = 3.0; (1.0 / i) >= x; i=i+2)
 	{
 		sch = sch*(-1);
-		result = result + (sch/i);
+		result = result + (sch / i);
 		cout << result << endl;
 	}
 	result = result * 4;
