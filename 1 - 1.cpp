@@ -1,5 +1,5 @@
 //a1
-#include 
+#include <iostream>
 int h3, m3, s3;
 using namespace std;
 void func(int h1, int m1, int s1, int h2, int m2, int s2)
@@ -23,5 +23,5 @@ int main()
 	int h1, m1, s1, h2, m2, s2;
 	cin >> h1 >> m1 >> s1 >> h2 >> m2 >> s2;
 	func(h1, m1, s1, h2, m2, s2);
-	cout << h3 << " " << m3 << " " << s3 << endl;
+	cout << h3 << ":" << m3 << ":" << s3 << endl;
 }
