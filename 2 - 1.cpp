@@ -1,33 +1,75 @@
-#include <ctime>
 #include <iostream>
+#include <ctime>
 #include <cmath>
-#include <string>
 using namespace std;
-string arr[20];
-string input()
+void randomize(float *arr, int length,int bot,int top)
 {
-	for (int i = 0; i <20; i++)
-		cin >> arr[i];
-	return arr;
-}
-string compare()
-{
-	string a;
-	for (int i = 0; i < 10; i++)
+	srand(time(0));
+	for (int i = 0; i < length; i++)
 	{
-		a = arr[i];
-		arr[i] = arr[19 - i];
-		arr[19 - i] = a;
+		int b = rand();
+		if (b % 2 == 0)
+			arr[i] = (rand()) % top + bot;
+		if (b % 2 == 1)
+			arr[i] = rand() % top + 1.0 / rand() + bot;
 	}
-	return arr;
 }
-string output()
+float aver(float *arr, int length)
 {
-	cout << arr;
+	float aversum = 0;
+	for (int i = 0; i < length; i++)
+		aversum =aversum + arr[i];
+	aversum = aversum / (length + 0.0);
+	return(aversum);
+}
+int flows(float *arr, int length)
+{
+	int counter = 0;
+	for (int i = 1; i < length - 1; i++)
+	{
+		if ((arr[i]>arr[i - 1]) && (arr[i] > arr[+1]))
+			counter = counter + 2;
+		if ((arr[i] < arr[i - 1]) && (arr[i] < arr[i + 1]))
+			counter = counter + 2;
+	}
+	if (counter == 0)
+		counter = counter + 1;
+	if (arr[length - 1] > arr[length - 2])
+		counter = counter + 1;
+	if (arr[0]>arr[1])
+		counter = counter + 1;
+	return(counter);
+}
+void output(float *arr, int length,int number,float aversum)
+{
+	for (int i = 0; i < length; i++)
+		cout << "arr[" << i << "] = " << arr[i] << endl;
+	cout << "average sum = " << aversum << endl;
+	cout << "number of flows = " << number;
 }
 int main()
 {
-	input();
-	compare();
-	output();
+	int length;
+	cin >> length;
+	float *arr1 = new float[length];
+	randomize(arr1, length, 0, 23);
+	output(arr1, length, flows(arr1, length), aver(arr1, length));
+	delete arr1;
+	cout << endl;
+	cout << "========================" << endl;
+	cin >> length;
+	float *arr2 = new float[length];
+	randomize(arr2, length, 50, 59);
+	output(arr2, length, flows(arr2, length), aver(arr2, length));
+	delete arr2;
+	cout << endl;
+	cout << "========================"<<endl;
+	cin >> length;
+	float *arr3 = new float[length];
+	randomize(arr3, length, -7, 5);
+	output(arr3, length, flows(arr3, length), aver(arr3, length));
+	delete arr3;
+	cout << endl;
+	cout << "========================" << endl;
+	return(0);
 }
