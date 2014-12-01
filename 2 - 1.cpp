@@ -2,7 +2,7 @@
 #include <ctime>
 #include <cmath>
 using namespace std;
-void randomize(float *arr, int length,int bot,int top)
+void randomize(float *arr, int length, int bot, int top)
 {
 	srand(time(0));
 	for (int i = 0; i < length; i++)
@@ -18,7 +18,7 @@ float aver(float *arr, int length)
 {
 	float aversum = 0;
 	for (int i = 0; i < length; i++)
-		aversum =aversum + arr[i];
+		aversum = aversum + arr[i];
 	aversum = aversum / (length + 0.0);
 	return(aversum);
 }
@@ -27,20 +27,15 @@ int flows(float *arr, int length)
 	int counter = 0;
 	for (int i = 1; i < length - 1; i++)
 	{
-		if ((arr[i]>arr[i - 1]) && (arr[i] > arr[+1]))
-			counter = counter + 2;
-		if ((arr[i] < arr[i - 1]) && (arr[i] < arr[i + 1]))
-			counter = counter + 2;
+		if ((arr[i]>arr[i - 1]) && (arr[i] > arr[i+1]))
+			counter = counter + 1;
+		if ((arr[i]<arr[i - 1]) && (arr[i]<arr[i + 1]))
+			counter = counter + 1;
 	}
-	if (counter == 0)
-		counter = counter + 1;
-	if (arr[length - 1] > arr[length - 2])
-		counter = counter + 1;
-	if (arr[0]>arr[1])
-		counter = counter + 1;
+	counter = counter + 1;
 	return(counter);
 }
-void output(float *arr, int length,int number,float aversum)
+void output(float *arr, int length, int number, float aversum)
 {
 	for (int i = 0; i < length; i++)
 		cout << "arr[" << i << "] = " << arr[i] << endl;
@@ -63,7 +58,7 @@ int main()
 	output(arr2, length, flows(arr2, length), aver(arr2, length));
 	delete arr2;
 	cout << endl;
-	cout << "========================"<<endl;
+	cout << "========================" << endl;
 	cin >> length;
 	float *arr3 = new float[length];
 	randomize(arr3, length, -7, 5);
@@ -73,3 +68,4 @@ int main()
 	cout << "========================" << endl;
 	return(0);
 }
+
