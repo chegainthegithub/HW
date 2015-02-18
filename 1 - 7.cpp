@@ -42,8 +42,6 @@ char  *romans(int arab)
 			}
 
 	}
-	for (int i = 0; i < numers; i++)
-		cout << romannum[i];
 	return(romannum);
 }
 int length(int arab)

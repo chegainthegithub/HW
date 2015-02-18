@@ -1,0 +1,98 @@
+bool check_date(char *text)
+{
+	if (text[2] != '.' || text[5] != '.') return false;
+	else
+	{
+		if ('0' > text[6] || text[6] > '9' || '0' > text[7] || text[7] > '9'
+			|| '0' > text[8] || text[8] > '9' || '0' > text[9] || text[9] > '9')
+			return false;
+		else
+		{
+			if (text[0] - '0' > 9 || text[0] - '0' < 0) return false;
+			int date = (text[0] - '0') * 10 + text[1] - '0';
+			if (date >= 32 || date == 0) return false;
+			else
+			{
+				int month = (text[3] - '0') * 10 + text[4] - '0';
+				if (month >= 13 || month == 0) return false;
+			}
+		}
+	}
+	return true;
+}
+//for F3
+
+void F3(string file_name){
+	fstream file(file_name);
+	fstream tempfile;
+	tempfile.open("temp.txt", ios_base::out | ios_base::trunc);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		remove("temp.txt");
+		return;
+	}
+	char c[10];
+	int i = 0;
+	while (1)
+	{
+		file.get(c[i]);
+		i++;
+		if (file.eof() || i >= 9) break;
+	}
+	if (!file.eof())
+	{
+		int dontwrite = 0;
+		while (1)
+		{
+			file.get(c[9]);
+			if (file.eof()) break;
+			if (check_date(c))
+			{
+				tempfile << c[0] << c[1] << c[2] << c[3] << c[4] << c[5];
+				int tempi = (c[6] - '0') * 1000 + (c[7] - '0') * 100 + (c[8] - '0') * 10 + c[9] - '0';
+				string temps = A7(tempi);
+				tempfile << temps;
+				c[0] = 0;
+				c[1] = 0;
+				c[2] = 0;
+				c[3] = 0;
+				c[4] = 0;
+				c[5] = 0;
+				c[6] = 0;
+				c[7] = 0;
+				c[8] = 0;
+				c[9] = 0;
+				dontwrite = 9;
+			}
+			else
+			{
+				if (!dontwrite)
+					tempfile << c[0];
+				else
+					dontwrite--;
+				for (int j = 0; j < 9; j++)
+				{
+					c[j] = c[j + 1];
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int j = 0; j <= i; j++)
+		{
+			tempfile << c[j];
+		}
+	}
+	file.close();
+	tempfile.close();
+	file.open(file_name, ios_base::out | ios_base::trunc);
+	tempfile.open("temp.temp", ios_base::in | ios_base::binary);
+	file_copy(&tempfile, &file);
+	file.close();
+	tempfile.close();
+	remove("temp.temp");
+	cout << "Done.\n";
+	return;
+}

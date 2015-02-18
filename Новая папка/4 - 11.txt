@@ -1,0 +1,32 @@
+void F11(string file_name){
+	fstream file;
+	file.open(file_name, ios_base::in | ios_base::binary);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	char a;
+	unsigned i = 0;
+	unsigned j = 0;
+	while (1)
+	{
+		//char *a = new char[82];
+		file.get(a);
+		//j++;
+		if (a == 10)
+		{
+			i++;
+		}
+		if (!(i % 26))
+		{
+			cin.get();
+			i = 1;
+		}
+		cout << a;
+		//delete[] a;
+		if (file.eof()) break;
+	}
+	file.close();
+	return;
+}

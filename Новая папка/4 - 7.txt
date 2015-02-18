@@ -1,0 +1,44 @@
+void F7(string file_name){
+	fstream file;
+	file.open(file_name);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	char *sentence = new char[1];
+	sentence[0] = 0;
+	unsigned sentencesize = 0;
+	char c;
+	while (1)
+	{
+		file.get(c);
+		if (c == '?')
+		{
+			for (unsigned nazvanieschetchika = 0; nazvanieschetchika < sentencesize; nazvanieschetchika++)
+				cout << sentence[nazvanieschetchika];
+			cout << "?" << endl;
+			delete[] sentence;
+			sentencesize = 1;
+			sentence = new char[1];
+		}
+		else
+		{
+			if (c == '.' || c == '!')
+			{
+				delete[] sentence;
+				sentence = new char[1];
+				sentencesize = 1;
+			}
+			else
+			{
+				sentencesize++;
+				sentence = rememory(sentence, sentencesize);
+				sentence[sentencesize - 1] = c;
+			}
+		}
+		if (file.eof()) break;
+	}
+	file.close();
+	return;
+}

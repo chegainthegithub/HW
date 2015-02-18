@@ -1,0 +1,29 @@
+void F9(string file_name){
+	fstream file;
+	file.open(file_name);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	string text;
+	while (1)
+	{
+		getline(file, text);
+		unsigned i = 0;
+		while (text[i] == ' ')
+		{
+			i++;
+		}
+		unsigned need = (80 - text.size()) / 2 - i;
+		for (int j = 0; j < need; j++)
+		{
+			cout << " ";
+		}
+		cout << text;
+		if (file.eof()) break;
+	}
+	file.close();
+	cout << "Done.";
+	return;
+}

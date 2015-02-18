@@ -1,0 +1,58 @@
+void F12(string file_name)
+{
+	fstream file;
+	file.open(file_name);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	fstream tempfile;
+	tempfile.open("temp.temp", ios_base::out | ios_base::trunc);
+	char table[] = "([{";
+	char table1[] = "})]";
+	char *stackp = 0;
+	char *stackd = 0;
+	char c;
+	int tbli = 0;
+	while (1)
+	{
+		file.get(c);
+		if (file.eof()) break;
+		if (c != '(')
+		{
+			if (c == ')')
+			{
+				c = table1[tbli % 3];
+				tbli--;
+			}
+			tempfile << c;
+		}
+		else
+		{
+			tempfile << table[tbli % 3];
+			tbli++;
+		}
+		if (tbli < 0)
+		{
+			break;
+		}
+	}
+	file.close();
+	tempfile.close();
+	if (tbli != 0)
+	{
+		cout << "Can't convert stream. Wrong data.\n";
+	}
+	else
+	{
+		file.open(file_name, ios_base::out | ios_base::trunc);
+		tempfile.open("temp.temp", ios_base::in | ios_base::binary);
+		file_copy(&tempfile, &file);
+		file.close();
+		tempfile.close();
+		cout << "Done.\n";
+	}
+	remove("temp.temp");
+	return;
+}

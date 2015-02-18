@@ -1,15 +1,15 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-int main()
+int main(int argc, char *argv[])
 {
 	setlocale(LC_ALL, "Russian");
 	double sum = 0, sr = 0, m[100];
 	int i = 0;
-	fstream fs("F1.txt");
+	fstream fs(argv[1]);
 	if (fs.is_open() == false)
 		cout << "Файл не открыт!" << endl;
-	while (fs.eof() == false)
+	while (!fs.eof())
 	{
 		fs >> m[i];
 		i++;

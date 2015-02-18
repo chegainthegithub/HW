@@ -1,4 +1,4 @@
-#include <iostream>
+##include <iostream>
 #include <ctime>
 #include <cmath>
 using namespace std;
@@ -9,9 +9,9 @@ void randomize(float *arr, int length, int bot, int top)
 	{
 		int b = rand();
 		if (b % 2 == 0)
-			arr[i] = (rand()) % top + bot;
+			arr[i] = (rand()) % (bot - top) + bot;
 		if (b % 2 == 1)
-			arr[i] = rand() % top + 1.0 / rand() + bot;
+			arr[i] = (rand()) % (bot - top) + 1.0 / rand() + bot;
 	}
 }
 float aver(float *arr, int length)
@@ -27,7 +27,7 @@ int flows(float *arr, int length)
 	int counter = 0;
 	for (int i = 1; i < length - 1; i++)
 	{
-		if ((arr[i]>arr[i - 1]) && (arr[i] > arr[i+1]))
+		if ((arr[i]>arr[i - 1]) && (arr[i] > arr[i + 1]))
 			counter = counter + 1;
 		if ((arr[i]<arr[i - 1]) && (arr[i]<arr[i + 1]))
 			counter = counter + 1;
@@ -49,23 +49,22 @@ int main()
 	float *arr1 = new float[length];
 	randomize(arr1, length, 0, 23);
 	output(arr1, length, flows(arr1, length), aver(arr1, length));
-	delete arr1;
+	delete[]arr1;
 	cout << endl;
 	cout << "========================" << endl;
 	cin >> length;
 	float *arr2 = new float[length];
 	randomize(arr2, length, 50, 59);
 	output(arr2, length, flows(arr2, length), aver(arr2, length));
-	delete arr2;
+	delete[]arr2;
 	cout << endl;
 	cout << "========================" << endl;
 	cin >> length;
 	float *arr3 = new float[length];
 	randomize(arr3, length, -7, 5);
 	output(arr3, length, flows(arr3, length), aver(arr3, length));
-	delete arr3;
 	cout << endl;
+	delete[]arr3;
 	cout << "========================" << endl;
 	return(0);
 }
-

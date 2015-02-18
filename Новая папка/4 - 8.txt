@@ -1,0 +1,51 @@
+void F8(string file_in_name, string file_out_name)
+{
+	fstream file_in;
+	fstream file_out;
+	file_in.open(file_in_name, ios_base::in | ios_base::binary);
+	file_out.open(file_out_name, ios_base::out | ios_base::trunc);
+	if (file_in.is_open() != true)
+	{
+		cout << "File '" << file_in_name << "' not found." << endl;
+		return;
+	}
+	char a1, a2;
+	file_in.get(a1);
+	bool should_write_b = true, should_write_m = true, delay = false; // b base m multi
+	while (1)
+	{
+		file_in.get(a2);
+		if (a1 == a2 && a1 == '/' && should_write_m)
+		{
+			should_write_b = false;
+		}
+		if (a1 == 10 && !should_write_b)
+		{
+			should_write_b = true;
+		}
+		if (a1 == '/' && a2 == '*' && should_write_b)
+		{
+			should_write_m = false;
+		}
+		if (delay)
+		{
+			delay = false;
+			should_write_m = true;
+		}
+		if (a1 == '*' && a2 == '/' && !should_write_m)
+		{
+			delay = true;
+			a2 = '\0';
+		}
+		if (should_write_b && should_write_m)
+		{
+			file_out << a1;
+		}
+		a1 = a2;
+		if ((file_in).eof()) break;
+	}
+	cout << "Done.";
+	file_in.close();
+	file_out.close();
+	return;
+}

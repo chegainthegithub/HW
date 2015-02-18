@@ -1,0 +1,240 @@
+unsigned Getfilesize(fstream *file)
+{
+	if ((*file).is_open())
+	{
+		unsigned y = (*file).tellg();
+		(*file).seekg(0, (*file).end);
+		unsigned x = (*file).tellg();
+		(*file).seekg(y, ios_base::beg);
+		return x;
+	}
+	return 0;
+}
+void F13_1(string file_name, unsigned n)
+{
+	fstream file;
+	file.open(file_name, ios_base::in | ios_base::binary);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	fstream file_s;
+	unsigned long filesize = Getfilesize(&file);
+	unsigned long curr_file_n = 0;
+	char c;
+	while (filesize > 0)
+	{
+		string files_name = file_name + '.';
+		files_name += to_string(curr_file_n);
+		file_s.open(files_name, ios_base::out | ios_base::trunc);
+		unsigned long i = 0;
+		while (filesize > 0 && i < n)
+		{
+			file.get(c);
+			if (file.eof()) break;
+			file_s << c;
+			i++;
+			filesize--;
+		}
+		curr_file_n++;
+		file_s.close();
+	}
+	file.close();
+	remove(file_name.c_str());
+	cout << "Done.";
+	return;
+}
+
+void F13_2(string file_name)
+{
+	fstream file;
+	file.open(file_name, ios_base::out | ios_base::trunc);
+	unsigned long curr_file_n = 0;
+	char c;
+	while (1)
+	{
+		fstream file_in;
+		string files_name = file_name + '.';
+		files_name += to_string(curr_file_n);
+		file_in.open(files_name, ios_base::in | ios_base::binary);
+		if (file_in.is_open() != true)
+			break;
+		while (1)
+		{
+			file_in.get(c);
+			if (file_in.eof())
+			{
+				file_in.close();
+				remove(files_name.c_str());
+				curr_file_n++;
+				break;
+			}
+			file << c;
+		}
+	}
+	file.close();
+	cout << "Done.";
+	return;
+}
+
+void F14(string file_name){
+	fstream file;
+	file.open(file_name, ios_base::in | ios_base::binary);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	string list;
+	list = file_name + ".list.txt";
+	fstream file_out;
+	file_out.open(list, ios_base::out | ios_base::trunc);
+	char c;
+	unsigned i = 0;
+	file_out << 0 << "\t" << hex;
+	while (1)
+	{
+		file.get(c);
+		if (file.eof()) break;
+		i++;
+		if (((int)c & 0xff) < 0x10)
+			file_out << "0" << ((int)c & 0xff) << " ";
+		else
+			file_out << ((int)c & 0xff) << " ";
+		if (!(i % 16))
+		{
+			file_out << endl << dec << i << "\t" << hex;
+		}
+	}
+	file.close();
+	file_out.close();
+	cout << "------------File created------------\n";
+	F11(list);
+	return;
+}
+
+void b64e(char *a, char* out)
+{
+	if (a == 0 || out == 0) return;
+	char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	bool f1 = false, f2 = false;
+	if (a[1] == -1) { a[1] = 0; f1 = true; }
+	if (a[2] == -1) { a[2] = 0; f2 = true; }
+	out[0] = table[a[0] >> 2];
+	out[1] = table[(a[0] & 3) << 4 | a[1] >> 4];
+	out[2] = table[(a[1] & 15) << 2 | a[2] >> 6];
+	out[3] = table[a[2] & 63];
+	if (f1) a[1] = -1;
+	if (f2) a[2] = -1;
+	return;
+}
+//for F15_1
+
+void b64de(char *in, char *out)
+{
+	if (in == 0 || out == 0) return;
+	char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+	char in_point[4];
+	int j = 0;
+	for (unsigned i = 0; i < 4; i++)
+	{
+		j = 0;
+		while (in[i] != table[j] && j < 65)
+		{
+			j++;
+		}
+		if (j == 64) return;
+		in_point[i] = j;
+	}
+	out[0] = (in_point[0] & 63) << 2 | (in_point[1] & 48) >> 4;
+	out[1] = (in_point[1] & 15) << 4 | (in_point[2] & 60) >> 2;
+	out[2] = (in_point[2] & 3) << 6 | (in_point[3] & 63);
+	return;
+}
+//for F_15_2
+void F15_1(string file_in_name, string file_out_name)
+{
+	fstream file_in;
+	fstream file_out;
+	file_in.open(file_in_name, ios_base::in | ios_base::binary);
+	file_out.open(file_out_name, ios_base::out | ios_base::trunc);
+	if (file_in.is_open() != true)
+	{
+		cout << "File '" << file_in_name << "' not found." << endl;
+		return;
+	}
+	while (1)
+	{
+		char a[3] = { -1, -1, -1 };
+		char out[4] = { 0, 0, 0, 0 };
+		(file_in).get(a[0]);
+		if (!(file_in).eof())
+		{
+			(file_in).get(a[1]);
+			if (!(file_in).eof())
+			{
+				(file_in).get(a[2]);
+			}
+		}
+		if (!(file_in).eof() || a[0] != -1){
+			b64e(a, out);
+			(file_out) << out[0] << out[1] << out[2] << out[3];
+			if (a[1] == -1)
+			{
+				(file_out) << "=";
+				if (a[2] == -1)
+				{
+					(file_out) << "=";
+				}
+			}
+		}
+		if ((file_in).eof()) break;
+	}
+	file_in.close();
+	file_out.close();
+	cout << "Encryption done.\n";
+	return;
+}
+
+void F15_2(string file_in_name, string file_out_name)
+{
+	fstream file_in;
+	fstream file_out;
+	file_in.open(file_in_name, ios_base::in | ios_base::binary);
+	file_out.open(file_out_name, ios_base::out | ios_base::trunc);
+	if (file_in.is_open() != true)
+	{
+		cout << "File '" << file_in_name << "' not found." << endl;
+		return;
+	}
+	while (1)
+	{
+		char in[4] = { 0, 0, 0, 0 };
+		char out[3] = { 0, 0, 0 };
+		(file_in).get(in[0]);
+		if (!(file_in).eof())
+		{
+			(file_in).get(in[1]);
+			if (!(file_in).eof())
+			{
+				(file_in).get(in[2]);
+				if (!(file_in).eof())
+				{
+					(file_in).get(in[3]);
+				}
+			}
+		}
+		if (!(file_in).eof())
+		{
+			b64de(in, out);
+			(file_out) << out[0] << out[1] << out[2];
+		}
+		if ((file_in).eof()) break;
+	}
+	return;
+	file_in.close();
+	file_out.close();
+	cout << "Decryption done.\n";
+	return;
+}

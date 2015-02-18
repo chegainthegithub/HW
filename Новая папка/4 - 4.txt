@@ -1,0 +1,23 @@
+void F4(string file_name, string word)
+{
+	fstream file(file_name);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	string strin;
+	int j = 0;
+	while (1)
+	{
+		getline(file, strin);
+		j = strin.find(word);
+		if (j != -1)
+		{
+			cout << strin << endl;
+		}
+		if (file.eof()) break;
+	}
+	file.close();
+	return;
+}

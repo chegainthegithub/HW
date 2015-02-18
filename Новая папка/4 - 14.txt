@@ -1,0 +1,35 @@
+void F14(string file_name){
+	fstream file;
+	file.open(file_name, ios_base::in | ios_base::binary);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	string list;
+	list = file_name + ".list.txt";
+	fstream file_out;
+	file_out.open(list, ios_base::out | ios_base::trunc);
+	char c;
+	unsigned i = 0;
+	file_out << 0 << "\t" << hex;
+	while (1)
+	{
+		file.get(c);
+		if (file.eof()) break;
+		i++;
+		if (((int)c & 0xff) < 0x10)
+			file_out << "0" << ((int)c & 0xff) << " ";
+		else
+			file_out << ((int)c & 0xff) << " ";
+		if (!(i % 16))
+		{
+			file_out << endl << dec << i << "\t" << hex;
+		}
+	}
+	file.close();
+	file_out.close();
+	cout << "------------File created------------\n";
+	F11(list);
+	return;
+}

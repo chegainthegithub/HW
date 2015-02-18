@@ -1,0 +1,47 @@
+unsigned F5(string file_name, string find){
+	fstream file(file_name);
+	if (file.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_name << "' not found.\n------------------------------------" << endl;
+		return 0;
+	}
+	string strin;
+	unsigned j = 0;
+	while (1)
+	{
+		unsigned i = 0;
+		int pos = 0;
+		getline(file, strin);
+		while (pos != -1 && i < strin.size())
+		{
+			pos = strin.find(find, i);
+			if (pos != -1)
+			{
+				if (pos + find.size() < strin.size() && pos - 1 >= 0)
+				{
+					if ((strin[pos - 1] == ' ' || strin[pos - 1] == '\"' || strin[pos - 1] == '\'' || strin[pos - 1] == '\t')
+						&& (strin[pos + find.size()] == ' ' || strin[pos + find.size()] == ','
+						|| strin[pos + find.size()] == '.' || strin[pos + find.size()] == '!' || strin[pos + find.size()] == '?'
+						|| strin[pos + find.size()] == '\"' || strin[pos + find.size()] == '\'' || strin[pos + find.size()] == '\n'))
+					{
+						j++;
+					}
+				}
+				else
+				{
+					if (pos - 1 < 0 && pos == 0 && (pos + find.size()) >= strin.size())
+						if (strin[pos + find.size()] == ' ' || strin[pos + find.size()] == ','
+							|| strin[pos + find.size()] == '.' || strin[pos + find.size()] == '!' || strin[pos + find.size()] == '?'
+							|| strin[pos + find.size()] == '\"' || strin[pos + find.size()] == '\'' || strin[pos + find.size()] == '\n')
+							j++;
+					if ((strin[pos - 1] == ' ' || strin[pos - 1] == '\"' || strin[pos - 1] == '\''))
+						j++;
+				}
+			}
+			i += pos + 1;
+		}
+		if (file.eof()) break;
+	}
+	file.close();
+	return j;
+}

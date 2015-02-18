@@ -1,0 +1,72 @@
+void F10(string file_in_name, string file_out_name){
+	fstream file_in;
+	fstream file_out;
+	file_in.open(file_in_name);
+	if (file_in.is_open() != true)
+	{
+		cout << "------------------------------------\nFile '" << file_in_name << "' not found.\n------------------------------------" << endl;
+		return;
+	}
+	file_out.open(file_out_name, ios_base::out | ios_base::trunc);
+	string text;
+	text.clear();
+	string text_out;
+	while (1)
+	{
+		text_out.clear();
+		getline(file_in, text);
+		unsigned words = 0;
+		unsigned i = 0;
+		while (text[i] == ' ')
+		{
+			i++;
+		}
+		while (i < text.size())
+		{
+			while (text[i] != ' ' && i < text.size())
+			{
+				if (text[i] != '\t')
+				{
+					text_out.push_back(text[i]);
+				}
+				i++;
+			}
+			if (text[i] == ' ')
+			{
+				text_out.push_back(' '); //разделяем слова
+				words++;
+			}
+			while (text[i] == ' ' && i < text.size())
+			{
+				i++;
+			}
+		}
+		if (words > 0)
+		{
+			unsigned need = (80 - text_out.size()) / words;
+			i = 0;
+			//unsigned leng = text_out.size();
+			while (i < text_out.size())
+			{
+				while (text_out[i] != ' ' && i < text_out.size())
+				{
+					i++;
+				}
+				if (text_out[i] == ' ')
+				{
+					for (int j = 0; j < need; j++)
+						text_out.insert(i, " ");
+					i += need;
+				}
+				i++;
+			}
+		}
+		else text_out = text;
+		file_out << text_out << endl;
+		if (file_in.eof()) break;
+	}
+	file_in.close();
+	file_out.close();
+	cout << "Done.";
+	return;
+}
